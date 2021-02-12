@@ -3,6 +3,7 @@ use colored::Colorize;
 use dialoguer::MultiSelect;
 use shiplift::{self, rep::Container as ContainerRep, ContainerListOptions, Containers};
 
+// Used for creating ListOptions
 pub trait InteractivelyCreate {
     fn interactively_create() -> Self;
 }
@@ -26,10 +27,17 @@ impl InteractivelyCreate for ContainerListOptions {
     }
 }
 
+// Present the given item on the screen
 pub trait Formattable {
     fn format(&self) -> String;
 }
 
+// The meat of this crate.
+// `shiplift` has some common concepts
+// - A representation of a docker object (container, volume...).
+// - An iterable of that object
+// - Options for fetching that iterable
+// This trait builds an interactive menu to return a subset of those objects
 #[async_trait]
 pub trait Listable {
     type Singular: Formattable;
