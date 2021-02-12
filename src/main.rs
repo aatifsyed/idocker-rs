@@ -1,15 +1,17 @@
-use idocker::{InteractivelyCreate, InteractivelySelect};
+use idocker::{InteractivelyCreate, Listable};
 use shiplift::{ContainerListOptions, Docker};
+use tokio;
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let opts = ContainerListOptions::interactively_create();
     println!("{:#?}", opts);
 
     let docker = Docker::new();
     let containers = docker.containers();
 
-    match containers.interactively_select(&opts) {
-        Ok(selected) => println!("{:#?}", selected),
+    match containers.interactively_select(&opts).await {
+        Ok(containers) => println!("{:#?}", containers),
         Err(err) => eprintln!("{:#?}", err),
     }
 }
