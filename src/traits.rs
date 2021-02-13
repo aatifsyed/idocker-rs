@@ -2,7 +2,7 @@ use async_trait::async_trait;
 use dialoguer::MultiSelect;
 
 // Present the given item on the screen, for interactive menus
-pub trait Formatable {
+pub trait Formattable {
     fn format(&self) -> String;
 }
 
@@ -14,7 +14,7 @@ pub trait Formatable {
 // This trait builds an interactive menu to return a subset of those objects
 #[async_trait]
 pub trait Listable {
-    type Singular: Formatable;
+    type Singular: Formattable;
     type ListOptions: Sync;
 
     async fn plural(
