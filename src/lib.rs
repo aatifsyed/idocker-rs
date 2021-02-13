@@ -1,3 +1,3 @@
 mod impls;
 mod traits;
-pub use traits::{Formattable, InteractivelyCreate, Listable};
+pub use traits::{Formatable, Listable};

@@ -1,13 +1,8 @@
 use async_trait::async_trait;
 use dialoguer::MultiSelect;
 
-// Used for creating ListOptions
-pub trait InteractivelyCreate {
-    fn interactively_create() -> Self;
-}
-
 // Present the given item on the screen, for interactive menus
-pub trait Formattable {
+pub trait Formatable {
     fn format(&self) -> String;
 }
 
@@ -19,7 +14,7 @@ pub trait Formattable {
 // This trait builds an interactive menu to return a subset of those objects
 #[async_trait]
 pub trait Listable {
-    type Singular: Formattable;
+    type Singular: Formatable;
     type ListOptions: Sync;
 
     async fn plural(
