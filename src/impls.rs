@@ -38,9 +38,10 @@ impl Formattable for ImageRep {
             None => self.id.to_owned(),
         };
         format!(
-            "{} {}",
+            "{} {} {}",
             name,
-            format!(", created {}", self.created).dimmed()
+            format!(", created {}", self.created).dimmed(),
+            format!(", size {}", self.virtual_size).cyan().dimmed()
         )
     }
 }

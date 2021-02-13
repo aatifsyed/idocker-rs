@@ -13,4 +13,5 @@ colored = "2.0.0"
 dialoguer = "0.7.1"
 shiplift = { git = "https://github.com/softprops/shiplift", rev = "5af822c" }
 slog = "2.7.0"
+structopt = "0.3.21"
 tokio = { version = "1.2.0", features = ["macros"] }
