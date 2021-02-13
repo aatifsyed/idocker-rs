@@ -1,5 +1,6 @@
 use async_trait::async_trait;
 use dialoguer::MultiSelect;
+use std::error::Error;
 
 // Present the given item on the screen, for interactive menus
 pub trait Formattable {
@@ -17,15 +18,13 @@ pub trait Listable {
     type Singular: Formattable;
     type ListOptions: Sync;
 
-    async fn plural(
-        &self,
-        opts: &Self::ListOptions,
-    ) -> Result<Vec<Self::Singular>, shiplift::Error>;
+    async fn plural(&self, opts: &Self::ListOptions)
+        -> Result<Vec<Self::Singular>, Box<dyn Error>>;
 
     async fn interactively_select(
         &self,
         options: &Self::ListOptions,
-    ) -> Result<Vec<Self::Singular>, shiplift::Error> {
+    ) -> Result<Vec<Self::Singular>, Box<dyn Error>> {
         let collection = self.plural(options).await?;
         let menu_items = collection
             .iter()

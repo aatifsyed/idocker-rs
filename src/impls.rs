@@ -8,6 +8,7 @@ use shiplift::{
     ContainerListOptions, Containers, ImageListOptions, Images, NetworkListOptions, Networks,
     Volumes,
 };
+use std::error::Error;
 
 impl Formattable for ContainerRep {
     fn format(&self) -> String {
@@ -26,8 +27,8 @@ impl Listable for Containers<'_> {
     async fn plural(
         &self,
         opts: &Self::ListOptions,
-    ) -> Result<Vec<Self::Singular>, shiplift::Error> {
-        self.list(opts).await
+    ) -> Result<Vec<Self::Singular>, Box<dyn Error>> {
+        Ok(self.list(opts).await?)
     }
 }
 
@@ -52,8 +53,8 @@ impl Listable for Images<'_> {
     async fn plural(
         &self,
         opts: &Self::ListOptions,
-    ) -> Result<Vec<Self::Singular>, shiplift::Error> {
-        self.list(opts).await
+    ) -> Result<Vec<Self::Singular>, Box<dyn Error>> {
+        Ok(self.list(opts).await?)
     }
 }
 
@@ -69,8 +70,8 @@ impl Listable for Networks<'_> {
     async fn plural(
         &self,
         opts: &Self::ListOptions,
-    ) -> Result<Vec<Self::Singular>, shiplift::Error> {
-        self.list(opts).await
+    ) -> Result<Vec<Self::Singular>, Box<dyn Error>> {
+        Ok(self.list(opts).await?)
     }
 }
 
@@ -87,8 +88,8 @@ impl Formattable for VolumeRep {
 impl Listable for Volumes<'_> {
     type Singular = VolumeRep;
     type ListOptions = ();
-    async fn plural(&self, _: &Self::ListOptions) -> Result<Vec<Self::Singular>, shiplift::Error> {
-        self.list().await
+    async fn plural(&self, _: &Self::ListOptions) -> Result<Vec<Self::Singular>, Box<dyn Error>> {
+        Ok(self.list().await?)
     }
 }
 
