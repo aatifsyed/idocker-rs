@@ -1,7 +1,5 @@
 use idocker::Listable;
-use shiplift::{
-    self, Container, ContainerListOptions, Docker, ImageListOptions, NetworkListOptions,
-};
+use shiplift::{self, Container, ContainerListOptions, Docker};
 use std::error::Error;
 use structopt::StructOpt;
 use tokio;
@@ -40,62 +38,77 @@ enum Opt {
     Volume(VolumeOpt),
 }
 
-fn main() {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
     let subcommand = Opt::from_args();
 
     match subcommand {
-        Opt::Container(action) => subcommand_container(action),
-        Opt::Image(action) => subcommand_image(action),
-        Opt::Network(action) => subcommand_network(action),
-        Opt::Volume(action) => subcommand_volume(action),
-    };
+        Opt::Container(action) => subcommand_container(action).await,
+        Opt::Image(action) => subcommand_image(action).await,
+        Opt::Network(action) => subcommand_network(action).await,
+        Opt::Volume(action) => subcommand_volume(action).await,
+    }
 }
 
-#[tokio::main]
 async fn subcommand_container(action: ContainerOpt) -> Result<(), Box<dyn Error>> {
     let docker = Docker::new();
     let opts = ContainerListOptions::builder().all().build();
     let containers = docker.containers();
     let selected = containers.interactively_select(&opts).await?;
-    let selected = selected
+    let selected: Vec<_> = selected
         .iter()
-        .map(|rep| Container::new(&docker, rep.id.to_owned()));
+        .map(|rep| Container::new(&docker, rep.id.to_owned()))
+        .collect();
 
     match action {
-        ContainerOpt::Rm { force } => {
-            if force {
-                selected.map(|container| container.kill(None));
-            };
-            selected.map(|container| container.remove(Default::default()))
-        }
-        ContainerOpt::Inspect => (),
-    };
+        ContainerOpt::Rm { force } => remove_containers(force, selected),
+        ContainerOpt::Inspect => unimplemented!(),
+    }
+    .await?;
     Ok(())
 }
 
-#[tokio::main]
+async fn remove_containers(
+    force: bool,
+    containers: Vec<Container<'_>>,
+) -> Result<(), Box<dyn Error>> {
+    if force {
+        for container in &containers {
+            match container.kill(None).await {
+                Err(err) => eprintln!("Couldn't kill container {}: {}", container.id(), err),
+                _ => (),
+            };
+        }
+    };
+    for container in &containers {
+        match container.delete().await {
+            Err(err) => eprintln!("Couldn't delete container {}: {}", container.id(), err),
+            _ => (),
+        }
+    }
+    Ok(())
+}
+
 async fn subcommand_image(action: ImageOpt) -> Result<(), Box<dyn Error>> {
     match action {
-        ImageOpt::Rm => 1,
-        ImageOpt::Inspect => 1,
+        ImageOpt::Rm => unimplemented!(),
+        ImageOpt::Inspect => unimplemented!(),
     };
     Ok(())
 }
 
-#[tokio::main]
 async fn subcommand_network(action: NetworkOpt) -> Result<(), Box<dyn Error>> {
     match action {
-        NetworkOpt::Rm => 1,
-        NetworkOpt::Inspect => 1,
+        NetworkOpt::Rm => unimplemented!(),
+        NetworkOpt::Inspect => unimplemented!(),
     };
     Ok(())
 }
 
-#[tokio::main]
 async fn subcommand_volume(action: VolumeOpt) -> Result<(), Box<dyn Error>> {
     match action {
-        VolumeOpt::Rm => 1,
-        VolumeOpt::Inspect => 1,
+        VolumeOpt::Rm => unimplemented!(),
+        VolumeOpt::Inspect => unimplemented!(),
     };
     Ok(())
 }
