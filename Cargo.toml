@@ -1,5 +1,6 @@
 [package]
 name = "idocker"
+description = "Interactively manage docker objects."
 version = "0.1.0"
 authors = ["Aatif Syed <aatif@aatifsyed.uk>"]
 edition = "2018"
