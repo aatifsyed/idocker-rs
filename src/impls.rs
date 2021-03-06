@@ -13,10 +13,10 @@ use std::error::Error;
 impl Formattable for ContainerRep {
     fn format(&self) -> String {
         format!(
-            "{} {} {}",
+            "{}{}{}",
             self.names[0],
-            format!(", image {}", self.image).dimmed(),
-            format!(", status {}", self.status.cyan()).dimmed(),
+            format!(", {}", self.image).dimmed(),
+            format!(", {}", self.status.cyan()).dimmed(),
         )
     }
 }
@@ -24,11 +24,8 @@ impl Formattable for ContainerRep {
 impl Listable for Containers<'_> {
     type Singular = ContainerRep;
     type ListOptions = ContainerListOptions;
-    async fn plural(
-        &self,
-        opts: &Self::ListOptions,
-    ) -> Result<Vec<Self::Singular>, Box<dyn Error>> {
-        Ok(self.list(opts).await?)
+    async fn list(&self, opts: &Self::ListOptions) -> Result<Vec<Self::Singular>, Box<dyn Error>> {
+        Ok(Containers::list(self, opts).await?)
     }
 }
 
@@ -50,11 +47,8 @@ impl Formattable for ImageRep {
 impl Listable for Images<'_> {
     type Singular = ImageRep;
     type ListOptions = ImageListOptions;
-    async fn plural(
-        &self,
-        opts: &Self::ListOptions,
-    ) -> Result<Vec<Self::Singular>, Box<dyn Error>> {
-        Ok(self.list(opts).await?)
+    async fn list(&self, opts: &Self::ListOptions) -> Result<Vec<Self::Singular>, Box<dyn Error>> {
+        Ok(Images::list(self, opts).await?)
     }
 }
 
@@ -67,20 +61,17 @@ impl Formattable for NetworkDetails {
 impl Listable for Networks<'_> {
     type Singular = NetworkDetails;
     type ListOptions = NetworkListOptions;
-    async fn plural(
-        &self,
-        opts: &Self::ListOptions,
-    ) -> Result<Vec<Self::Singular>, Box<dyn Error>> {
-        Ok(self.list(opts).await?)
+    async fn list(&self, opts: &Self::ListOptions) -> Result<Vec<Self::Singular>, Box<dyn Error>> {
+        Ok(Networks::list(self, opts).await?)
     }
 }
 
 impl Formattable for VolumeRep {
     fn format(&self) -> String {
         format!(
-            "{} {}",
+            "{}{}",
             self.name,
-            format!(", created at {}", self.created_at).dimmed()
+            format!(", created {}", self.created_at).dimmed()
         )
     }
 }
@@ -88,8 +79,8 @@ impl Formattable for VolumeRep {
 impl Listable for Volumes<'_> {
     type Singular = VolumeRep;
     type ListOptions = ();
-    async fn plural(&self, _: &Self::ListOptions) -> Result<Vec<Self::Singular>, Box<dyn Error>> {
-        Ok(self.list().await?)
+    async fn list(&self, _: &Self::ListOptions) -> Result<Vec<Self::Singular>, Box<dyn Error>> {
+        Ok(Volumes::list(self).await?)
     }
 }
 

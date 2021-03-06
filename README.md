@@ -1,6 +1,5 @@
 # idocker-rs
-A work-in-progress CLI utility for interactively dealing with multiple containers.  
-Release is currently blocked on `shiplift 7.0`.  
+A work-in-progress CLI utility for interactively dealing with multiple containers. 
 
 ```
 idocker container rm --force

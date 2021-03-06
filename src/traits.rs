@@ -18,14 +18,13 @@ pub trait Listable {
     type Singular: Formattable;
     type ListOptions: Sync;
 
-    async fn plural(&self, opts: &Self::ListOptions)
-        -> Result<Vec<Self::Singular>, Box<dyn Error>>;
+    async fn list(&self, opts: &Self::ListOptions) -> Result<Vec<Self::Singular>, Box<dyn Error>>;
 
     async fn interactively_select(
         &self,
         options: &Self::ListOptions,
     ) -> Result<Vec<Self::Singular>, Box<dyn Error>> {
-        let collection = self.plural(options).await?;
+        let collection = self.list(options).await?;
         let menu_items = collection
             .iter()
             .map(|x| x.format())

@@ -69,7 +69,11 @@ async fn subcommand_container(docker: Docker, action: ContainerOpt) -> Result<()
                 for container in &selected {
                     match container.kill(None).await {
                         Err(err) => {
-                            eprintln!("Couldn't kill container {}: {}", container.id(), err)
+                            eprintln!(
+                                "Couldn't kill container {}: {:?}",
+                                container.inspect().await?.name,
+                                err
+                            );
                         }
                         _ => (),
                     };

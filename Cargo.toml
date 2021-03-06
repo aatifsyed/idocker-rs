@@ -7,8 +7,6 @@ edition = "2018"
 license = "MIT"
 repository = "https://github.com/aatifsyed/idocker-rs"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 async-trait = "0.1.42"
 colored = "2.0.0"
