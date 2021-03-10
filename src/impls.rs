@@ -1,4 +1,5 @@
-use crate::traits::{Formattable, Listable};
+/// Implements traits for the docker objects we're interested in
+use crate::{Formattable, Listable};
 
 use async_trait::async_trait;
 use colored::Colorize;
